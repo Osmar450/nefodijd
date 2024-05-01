@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Plano Cartesiano Interactivo</title>
+  
+
+  <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+  <link href="styles.css" rel="stylesheet">
+  <style>
+    body {
+        margin: 3%;
+        height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+      }
+      
+    #container {
+        position: relative;
+        width: 900px;
+        height: 700px;
+        margin: auto;
+        border: 10px solid rgb(0, 0, 0);
+      }
+      
+      #myCanvas {
+        position: absolute;
+        top: 0;
+        left: 0;
+      }
+      
+      #xLabel {
+        position: absolute;
+        left: calc(50% - 20px);
+        top: 5px;
+        transform: translateY(-50%);
+      }
+      
+      #yLabel {
+        position: absolute;
+        left: 5px;
+        top: 5px;
+      }
+      
+      #inputTable {
+        position: absolute;
+        top: 800px; /* Fuera del plano */
+        left: 10px; /* Fuera del plano */
+      }
+      
+      #inputTable td {
+        padding: 10px;
+      }
+      
+      .btn-tab,
+      .btn-reset {
+        padding: 15px 30px;
+        margin: 10px;
+      }
+      
+      /* Contenedor para elementos centrados */
+      .centered-elements {
+        display: flex; /* Agrupación y alineación vertical */
+        flex-direction: column; /* Alineación en columna */
+        align-items: center; /* Centrado vertical */
+        justify-content: center; /* Centrar horizontalmente también */
+        height: 100%; /* Ocupar toda la altura del contenedor */
+      }
+      
+      .credit {
+        margin-top: 20px; /* Posicionar en la parte inferior */
+        font-style: italic;
+      }
+      
+      
+      
+  </style>
+</head>
+<body>
+    <imagen-osmar></imagen-osmar>
+
+    <border-component></border-component>
+    <script src="main.js"></script>
+  <div id="container">
+    <canvas id="myCanvas" width="900" height="700"></canvas>
+    <span id="xLabel">X</span>
+    <span id="yLabel">Y</span>
+  </div>
+  <table id="inputTable">
+    <tr>
+      <td><label for="xValue1">X1:</label></td>
+      <td><input type="number" id="xValue1" min="-100" max="100"></td>
+      <td><label for="xValue2">X2:</label></td>
+      <td><input type="number" id="xValue2" min="-100" max="100"></td>
+      <td><label for="xValue3">X3:</label></td>
+      <td><input type="number" id="xValue3" min="-100" max="100"></td>
+    </tr>
+    <tr>
+      <td><label for="yValue1">Y1:</label></td>
+      <td><input type="number" id="yValue1" min="-100" max="100"></td>
+      <td><label for="yValue2">Y2:</label></td>
+      <td><input type="number" id="yValue2" min="-100" max="100"></td>
+      <td><label for="yValue3">Y3:</label></td>
+      <td><input type="number" id="yValue3" min="-100" max="100"></td>
+    </tr>
+    <tr>
+      <td colspan="6">
+        <button class="btn btn-primary btn-tab" onclick="plotPoint()">Tabular</button>
+        <button class="btn btn-danger btn-reset" onclick="resetCanvas()">Reiniciar</button>
+      </td>
+    </tr>
+  </table>
+  <p class="credit">Hecho por Osmar Enrique</p>
+  <script>
+    const canvas = document.getElementById("myCanvas");
+    const ctx = canvas.getContext("2d");
+
+    // Función para dibujar los ejes del plano cartesiano
+    // Función para dibujar los ejes del plano cartesiano
+function drawAxes() {
+    ctx.beginPath();
+    ctx.moveTo(0, canvas.height / 2);
+    ctx.lineTo(canvas.width, canvas.height / 2);
+    ctx.stroke();
+  
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2, 0);
+    ctx.lineTo(canvas.width / 2, canvas.height);
+    ctx.stroke();
+  }
+  
+  // Función para dibujar una cuadrícula en el plano cartesiano
+  function drawGrid() {
+    ctx.beginPath();
+  
+    // Establecer el paso de las líneas en 10
+    const step = 10;
+  
+    // Ajustar el punto de inicio a 0
+    const startXOffset = 0;
+    const startYOffset = 0;
+  
+    for (let x = startXOffset; x <= canvas.width; x += step) {
+      ctx.moveTo(x, 0);
+      ctx.lineTo(x, canvas.height);
+    }
+  
+    for (let y = startYOffset; y <= canvas.height; y += step) {
+      ctx.moveTo(0, y);
+      ctx.lineTo(canvas.width, y);
+    }
+  
+    ctx.strokeStyle = "#ccc"; // Color gris claro
+    ctx.stroke();
+  }
+  
+  // Función para calcular el máximo divisor común (MCD)
+  function getGCD(a, b) {
+    while (b) {
+      const oldB = b;
+      b = a % b;
+      a = oldB;
+    }
+    return a;
+  }
+  
+
+    // Función para dibujar un punto en el plano cartesiano
+    function drawPoint(x, y) {
+      ctx.beginPath();
+      ctx.arc(canvas.width / 2 + x * 4, canvas.height / 2 - y * 4, 4, 0, Math.PI * 2);
+      ctx.fillStyle = "red";
+      ctx.fill();
+    }
+
+    // Función para dibujar una línea entre dos puntos en el plano cartesiano
+    function drawLine(x1, y1, x2, y2) {
+      ctx.beginPath();
+      ctx.moveTo(canvas.width / 2 + x1 * 4, canvas.height / 2 - y1 * 4);
+      ctx.lineTo(canvas.width / 2 + x2 * 4, canvas.height / 2 - y2 * 4);
+      ctx.strokeStyle = "blue";
+      ctx.stroke();
+    }
+
+    // Función para limpiar el lienzo
+    function clearCanvas() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+    }
+
+    // Función para reiniciar el lienzo y limpiar los campos de coordenadas
+    function resetCanvas() {
+      clearCanvas();
+      document.getElementById("xValue1").value = "";
+      document.getElementById("yValue1").value = "";
+      document.getElementById("xValue2").value = "";
+      document.getElementById("yValue2").value = "";
+      document.getElementById("xValue3").value = "";
+      document.getElementById("yValue3").value = "";
+    }
+
+    // Función principal para trazar un punto en el plano cartesiano
+    function plotPoint() {
+      clearCanvas();
+      drawAxes();
+      drawGrid();
+
+      const points = [
+        { x: parseFloat(document.getElementById("xValue1").value), y: parseFloat(document.getElementById("yValue1").value) },
+        { x: parseFloat(document.getElementById("xValue2").value), y: parseFloat(document.getElementById("yValue2").value) },
+        { x: parseFloat(document.getElementById("xValue3").value), y: parseFloat(document.getElementById("yValue3").value) }
+      ];
+
+      for (let i = 0; i < points.length - 1; i++) {
+        drawPoint(points[i].x, points[i].y);
+        drawPoint(points[i + 1].x, points[i + 1].y);
+        drawLine(points[i].x, points[i].y, points[i + 1].x, points[i + 1].y);
+      }
+    }
+  </script>
+  <script>mains.js</script>
+</body>
+</html>

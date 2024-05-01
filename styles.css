@@ -1,0 +1,80 @@
+body {
+    background-color: #b0e0e6; /* Fondo azul claro */
+    font-family: Arial, sans-serif; /* Fuente del cuerpo */
+}
+
+#container {
+    background-color: #ffffff; /* Fondo blanco */
+    border-radius: 10px; /* Bordes redondeados */
+    padding: 10px; /* Añadido un poco de espacio interno */
+    position: relative; /* Posición relativa para el contenedor */
+}
+
+#container::after {
+    content: ''; /* Contenido generado pseudo-elemento */
+    position: absolute; /* Posición absoluta para el pseudo-elemento */
+    top: -6px; /* Desplazamiento hacia arriba */
+    left: -6px; /* Desplazamiento hacia la izquierda */
+    right: -6px; /* Desplazamiento hacia la derecha */
+    bottom: -6px; /* Desplazamiento hacia abajo */
+    border-radius: 10px; /* Bordes redondeados */
+    animation: rainbowBorder 3s infinite; /* Animación del borde arcoíris */
+    border: 6px solid transparent; /* Borde transparente para que la animación sea visible */
+}
+
+@keyframes rainbowBorder {
+    0% { border-color: red; }
+    25% { border-color: orange; }
+    50% { border-color: yellow; }
+    75% { border-color: green; }
+    100% { border-color: blue; }
+}
+
+#xLabel,
+#yLabel {
+    color: #000; /* Texto negro */
+}
+
+.btn-primary,
+.btn-danger {
+    background-color: #ffd700; /* Amarillo */
+    border: 2px solid #000; /* Borde negro */
+    color: #000; /* Texto negro */
+    border-radius: 8px; /* Bordes redondeados */
+    cursor: pointer; /* Cursor de puntero al pasar el ratón */
+    transition: background-color 0.3s ease; /* Transición suave */
+}
+
+.btn-primary:hover,
+.btn-danger:hover {
+    background-color: #ffcc00; /* Amarillo más oscuro al pasar el ratón */
+}
+
+.credit {
+    color: #000; /* Texto negro */
+}
+/* Estilos para el componente de borde */
+border-component {
+    display: block;
+    border: 6px solid #000; /* Borde negro */
+    background-image: url('math.png'); /* Imagen de fondo llamada 'math.png' */
+    background-size: cover; /* Ajustar el tamaño de la imagen para cubrir todo el fondo */
+    color: #fff; /* Texto blanco */
+    border-radius: 200px; /* Bordes redondeados */
+    padding: 30px; /* Aumentar el relleno */
+    text-align: center;
+    margin: 20px auto; /* Centrar el componente en la página */
+    max-width: 900px; /* Ancho máximo del componente */
+    height: 50px; /* Altura del componente */
+
+    }
+    body {
+        background-image: url('cat.png'); /* Ruta de la imagen */
+        background-repeat: repeat; /* Repetir la imagen en ambas direcciones */
+        background-position: center; /* Posición centrada de la imagen */
+        background-size: 200px; /* Tamaño de la imagen */
+        
+      }
+      /* Estilos para el componente de imagen */
+
+      
